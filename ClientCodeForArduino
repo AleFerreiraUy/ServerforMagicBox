@@ -10,7 +10,7 @@ String lastReading = "";
 #define SS_PIN  4   //Pin 10 para el SS (SDA) del RC522
 MFRC522 mfrc522(SS_PIN, RST_PIN); //Creamos el objeto para el RC522
 
-byte buzzPin = 2; //Esto equivale al pin D4 del NodeMCU
+byte buzzPin = D0; //Esto equivale al pin D0 del NodeMCU
 
 String ArrayOfCards[] = {"7C678DC0", "B71C813F", "2E80307A", "3ED8A37B", "5EF66CAF", "2EAF9BAF", "5E85C8AF", "7E98C5AF", "3E78EF7A", "0E92DB7B", "AE049BAF", "1E75C8AF", "8C1885C0", "7CC487C0", "1CEE8CC0", "FCDF8DC0", "7CE287C0", "CC3195C0", "2E83757A", "5C2E8CC0", "BC7884C0", "9C6C8CC0", "5EA5CA5B", "DE6DA65B", "EEAF997B", "CE8F827A", "601E9B16", "70547416", "40AD3216", "10B79816", "B0579416", "E0737716", "20757116", "00657116", "B0007116", "307F9916", "D0301616", "40877416", "80AC8D16", "B02D6616", "40653616", "60D39816", "408D6616", "20B59816", "10402F16", "F0051516", "307F7416", "A0B87216", "97E0F5F2", "30C2932C", "40A76816", "E0FE7716", "80994016", "50B09816", "709D9516", "60357116", "00BC9816", "D0755732", "801C7016", "10082416", "003E6916", "D0B11716", "20909816", "10A06F16", "A0D73916", "40023516"};
 
@@ -23,6 +23,7 @@ void setup() {
   pinMode (D3, OUTPUT);
   pinMode (D8, OUTPUT);
 
+  // ESP.wdtDisable();
 }
 
 void loop() {
@@ -86,33 +87,9 @@ void bytes_to_string(byte array[], unsigned int len, char buffer[])
   buffer[len * 2] = '\0';
 }
 
+  //Sonido del beep
 
-//Definición para funcionamiento de Buzz
-
-void buzz(int targetPin, long frequency, long length) {
-  long delayValue = 1000000 / frequency / 2; 
-  
-  // calculate the delay value between transitions
-  // 1 second's worth of microseconds, divided by the frequency, then split in half since
-  // there are two phases to each cycle
-  
-  long numCycles = frequency * length / 1000; 
-  
-  // calculate the number of cycles for proper timing
-  // multiply frequency, which is really cycles per second, by the number of seconds to
-  // get the total number of cycles to produce
-  
-  for (long i = 0; i < numCycles; i++) { 
-    // for the calculated length of time...
-    digitalWrite(targetPin, HIGH); // write the buzzer pin high to push out the diaphram
-    delayMicroseconds(delayValue); // wait for the calculated delay value
-    digitalWrite(targetPin, LOW); // write the buzzer pin low to pull back the diaphram
-    delayMicroseconds(delayValue); // wait again for the calculated delay value
+  void buzzbeep() {
+  tone(buzzPin, 932.33, 80);
   }
-}
 
-//Sonido del beep
-
-void buzzbeep() {
-  buzz(buzzPin, 932.33, 80);
-}
